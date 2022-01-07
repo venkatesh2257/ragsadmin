@@ -1,5 +1,19 @@
 <?php
     include 'connect.php';
+    $id=$_GET['updateid'];
+    $sql="select * from `info` where id=$id";
+    $result=mysqli_query($conn,$sql);
+    $row=mysqli_fetch_assoc($result);
+
+    $id = $row['id'];
+    $ministry = $row['ministry'];
+    $month = $row['month'];
+    $income = $row['income'];
+    $expensives = $row['expensives'];
+    $summary = $row['summary'];
+    $work_report = $row['work_report'];
+
+
     if(isset($_POST['Submit'])) {
 
 	$ministry = $_POST['ministry'];
@@ -11,19 +25,20 @@
 
 	//Data inserting into the database 
 	
-	$sql_query = "INSERT INTO info (ministry,month,income,expensives,summary,work_report)
-	VALUES ('$ministry','$month','$income','$expensives','$summary','$workReport') ";
+	$sql_query = "update `info` set id='$id',ministry='$ministry',
+                month='$month',income='$income',expensives='$expensives',summary='$summary',work_report='$workReport' where id='$id'";
 
 
 	 if (mysqli_query($conn,$sql_query))
 	  {
-	 	echo"New details Entered successfully !";
+	 	// echo"New details Entered successfully !";
 	 	header('location:show.php');
 
 	 }
 	 else
 	 {
-	 	echo "Error: ".$sql."".mysqli_error($conn);
+        die(mysqli_error($conn));
+	 	// echo "Error: ".$sql."".mysqli_error($conn);
 	 }
 
 	 mysqli_close($conn);
@@ -64,7 +79,7 @@
   <body>
       
       
-      <h1  class="my-4"><u>Enter Details</u></h1>
+      <h1>Work Report</h1>
     <div class = "container">
 
 
@@ -73,7 +88,7 @@
    
     <div class="mb-3">
       <label  class="form-label" >Ministry</label>
-      <select id="disabledSelect" class="form-select" name="ministry"  required>
+      <select id="disabledSelect" class="form-select" require name="ministry" >
         <option value="Rags">Rags</option>
         <option value="FWM">FWM</option>
         <option value="Exedos">Exedos</option>
@@ -85,10 +100,12 @@
         <option value="IBC">IBC</option>
         <option value="WorshipTeam">WorshipTeam</option>
       </select>
+      <p><?php echo "Previous: <B>$ministry</B>"  ?> </p>
     </div>
     <div class="mb-3">
       <label  class="form-label">Month</label>
-      <select id="disabledSelect" class="form-select"  name="month" required>
+      <select id="disabledSelect" class="form-select"  name="month" require value=<?php
+      echo $ministry?>>
       <option value="Jan">Jan</option>
 	  <option value="Feb">Feb</option>
 	  <option value="March">March</option>
@@ -102,15 +119,18 @@
 	  <option value="Nov">Nov</option>
 	  <option value="Dec">Dec</option>
       </select>
+      <p><?php echo "Previous: <B>$month</B>"  ?> </p>
     </div>
     
   <div class="mb-3">
     <label class="form-label">Income</label>
-    <input type="text" class="form-control" id="income" name="income" required>
+    <input type="text" class="form-control" id="income" name="income" require value=<?php
+      echo $income?>>
   </div>
   <div class="mb-3">
     <label class="form-label">Expensives</label>
-    <input type="text" class="form-control" id="exampleInputPassword1" name="expensives" require>
+    <input type="text" class="form-control" id="exampleInputPassword1" name="expensives"require value=<?php
+      echo $expensives?>>
   </div>
   <!-- <div class="mb-3">
     <label class="form-label">Summary</label>
@@ -118,7 +138,8 @@
   </div> -->
   <div class="mb-3">
     <label class="form-label">Work Report</label>
-    <input type="text" class="form-control" id="workReport" name="workReport" required>
+    <input type="text" class="form-control" id="workReport" name="workReport"require value=<?php
+      echo $work_report?>>
   </div>
   <button type="submit" class="btn btn-primary" name="Submit">Submit</button>
 </form>
